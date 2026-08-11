@@ -81,3 +81,68 @@ textarea{resize:vertical}
   font-weight:900;
   cursor:pointer;
 }
+
+
+/* 사무실 주문현황 - 큰 글씨 / 진한 글씨 */
+.office-item,
+.row{
+  padding:18px 16px;
+}
+
+.office-item .name,
+.row .customer{
+  font-size:27px !important;
+  font-weight:900 !important;
+  color:#102333 !important;
+  line-height:1.25 !important;
+}
+
+.office-item .desc,
+.row .details{
+  font-size:19px !important;
+  font-weight:800 !important;
+  color:#243f55 !important;
+  line-height:1.65 !important;
+}
+
+.status-pill,
+.badge{
+  font-size:16px !important;
+  font-weight:900 !important;
+  padding:7px 12px !important;
+}
+
+.edit-btn,
+.delete,
+.small-btn{
+  font-size:17px !important;
+  font-weight:900 !important;
+  padding:10px 13px !important;
+}
+
+.panel h2,
+.section-head h2{
+  font-size:30px !important;
+  font-weight:900 !important;
+}
+
+.summary-card span{
+  font-size:16px !important;
+  font-weight:800 !important;
+}
+
+.summary-card b{
+  font-size:34px !important;
+  font-weight:900 !important;
+}
+
+@media(max-width:800px){
+  .office-item .name,
+  .row .customer{
+    font-size:25px !important;
+  }
+  .office-item .desc,
+  .row .details{
+    font-size:18px !important;
+  }
+}
