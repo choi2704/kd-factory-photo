@@ -7,7 +7,7 @@ else document.getElementById("syncText").textContent="실시간 연결됨";
 async function loadOrders(){
   if(!configured){ listEl.innerHTML='<div class="empty">config.js 설정 후 사용 가능합니다.</div>'; return; }
   const {data,error}=await db.from("production_orders").select("*").order("created_at",{ascending:false});
-  if(error){listEl.innerHTML='<div class="empty">불러오기 오류: '+esc(error.message)+'</div>';return}
+  if(error){listEl.innerHTML='<div class="empty">불러오기 오류: '+esc(connectionHelp(error))+'</div>';return}
   render(data||[]);
 }
 function render(rows){
@@ -31,7 +31,7 @@ function render(rows){
 async function removeOrder(id){
   if(!confirm("이 주문을 삭제할까요?")) return;
   const {error}=await db.from("production_orders").delete().eq("id",id);
-  if(error) alert(error.message);
+  if(error) alert(connectionHelp(error));
 }
 orderForm.addEventListener("submit", async e=>{
   e.preventDefault();
@@ -41,7 +41,7 @@ orderForm.addEventListener("submit", async e=>{
     items:items.value.trim(),memo:memo.value.trim(),status:"working"
   };
   const {error}=await db.from("production_orders").insert(payload);
-  if(error){alert(error.message);return}
+  if(error){alert(connectionHelp(error));return}
   e.target.reset();
 });
 refreshBtn.onclick=loadOrders;

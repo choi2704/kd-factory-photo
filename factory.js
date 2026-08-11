@@ -18,7 +18,7 @@ document.querySelectorAll(".filter").forEach(btn=>{
 async function loadOrders(){
   if(!configured){root.innerHTML='<div class="empty">config.js 설정 후 사용 가능합니다.</div>';return}
   const {data,error}=await db.from("production_orders").select("*").eq("status",currentFilter).order("created_at",{ascending:true});
-  if(error){root.innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}
+  if(error){root.innerHTML='<div class="empty">'+esc(connectionHelp(error))+'</div>';return}
   render(data||[]);
 }
 
