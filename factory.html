@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>공장 - 강동자바라 제작관리</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<header class="header">
+  <div><h1>공장 작업완료</h1><p>완료 사진을 찍은 뒤 작업완료를 눌러주세요.</p><div class="sync" id="syncText">연결 확인 중</div></div>
+  <a href="office.html">사무실</a>
+</header>
+<div class="factory-wrap">
+  <div id="notice" class="notice">Supabase 설정 전입니다. config.js에 URL과 Anon Key를 넣어주세요.</div>
+  <div class="factory-top">
+    <button class="filter active" data-filter="working">작업중</button>
+    <button class="filter" data-filter="done">완료</button>
+  </div>
+  <div id="factoryList"></div>
+</div>
+<script src="supabase-common.js"></script>
+<script src="factory.js"></script>
+</body></html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>사무실 - 강동자바라 제작관리</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<header class="header">
+  <div><h1>사무실 제작관리</h1><p>주문 등록 · 작업완료 사진 확인</p><div class="sync" id="syncText">연결 확인 중</div></div>
+  <a href="factory.html">📱 공장화면</a>
+</header>
+<main>
+  <div id="notice" class="notice">Supabase 설정 전입니다. config.js에 URL과 Anon Key를 넣어주세요.</div>
+  <div class="summary">
+    <div class="summary-card"><span>전체</span><b id="total">0</b></div>
+    <div class="summary-card"><span>작업중</span><b id="workingCount">0</b></div>
+    <div class="summary-card"><span>작업완료</span><b id="doneCount">0</b></div>
+  </div>
+  <div class="grid">
+    <section class="panel">
+      <h2>새 주문 등록</h2>
+      <form id="orderForm">
+        <label>업체명 / 고객명<input id="customer" required></label>
+        <label>연락처<input id="phone"></label>
+        <label>주소<textarea id="address" rows="2"></textarea></label>
+        <label>주문내역<textarea id="items" rows="5" required></textarea></label>
+        <label>메모<textarea id="memo" rows="2"></textarea></label>
+        <button class="primary" type="submit">주문 등록</button>
+      </form>
+    </section>
+    <section class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px">
+        <h2 style="margin:0">주문 현황</h2><button class="refresh" id="refreshBtn">새로고침</button>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+  </div>
+</main>
+<script src="supabase-common.js"></script>
+<script src="office.js"></script>
+</body></html>
