@@ -184,3 +184,28 @@ textarea{resize:vertical}
   border:3px solid var(--navy) !important;
   box-shadow:0 0 0 2px rgba(22,58,89,.08);
 }
+
+
+/* 출고관리 시스템 */
+.shipping-panel{margin-top:18px}
+.shipping-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+.shipping-head h2{margin:0;font-size:30px;font-weight:900}
+.shipping-head p{margin:5px 0 0;color:var(--muted);font-weight:700}
+.shipping-date-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.shipping-date-controls input[type="date"]{width:auto;margin:0;padding:10px 12px;font-weight:900;font-size:17px}
+.shipping-summary{display:flex;align-items:center;gap:10px;background:#f4f8fb;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:12px;font-weight:900}
+.shipping-summary b{font-size:26px;color:var(--navy)}
+.shipping-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:12px}
+.shipping-card{border:2px solid var(--line);border-radius:14px;padding:16px;background:white}
+.shipping-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.shipping-customer{font-size:26px;font-weight:900;color:#102333}
+.shipping-order{margin-top:12px;padding:12px;border-radius:10px;background:#f3f7fa;font-size:19px;line-height:1.55;font-weight:900;white-space:pre-wrap}
+.shipping-info{margin-top:10px;display:grid;gap:7px;font-size:17px;font-weight:800;color:#243f55}
+.shipping-info b{display:inline-block;min-width:82px;color:#526a7a}
+.ship-date-mini{margin-top:8px;font-size:15px;font-weight:900;color:#1e6d9e}
+@media(max-width:800px){
+  .shipping-head{align-items:flex-start;flex-direction:column}
+  .shipping-date-controls{width:100%}
+  .shipping-date-controls input[type="date"]{flex:1;min-width:160px}
+  .shipping-list{grid-template-columns:1fr}
+}

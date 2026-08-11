@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사무실 - 강동자바라 제작관리</title>
-<link rel="stylesheet" href="style.css?v=20260811-1640">
+<link rel="stylesheet" href="style.css?v=20260812-0845">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=20260811-1621"></script>
+<script src="config.js?v=20260812-0845"></script>
 </head>
 <body>
 <header class="header">
-  <div><h1>사무실 제작관리</h1><p>주문 등록 · 작업완료 사진 확인</p><div class="sync" id="syncText">연결 확인 중</div></div>
+  <div><h1>사무실 제작관리</h1><p>주문 등록 · 작업완료 · 출고관리</p><div class="sync" id="syncText">연결 확인 중</div></div>
   <a href="factory.html">📱 공장화면</a>
 </header>
 <main>
@@ -32,6 +32,8 @@
         <label>업체명 / 고객명<input id="customer" required></label>
         <label>연락처<input id="phone"></label>
         <label>주소<textarea id="address" rows="2"></textarea></label>
+        <label>출고일<input id="shipDate" type="date"></label>
+        <label>배송내용<textarea id="deliveryDetails" rows="3" placeholder="예: 대신화물 / 용달 / 착불 / 직접수령 / 기사님 전달사항"></textarea></label>
         <label>주문내역<textarea id="items" rows="5" required></textarea></label>
         <label>메모<textarea id="memo" rows="2"></textarea></label>
         <button class="primary" id="submitBtn" type="submit">주문 등록</button>
@@ -45,7 +47,28 @@
       <div id="list" class="list"></div>
     </section>
   </div>
+
+  <section class="panel shipping-panel">
+    <div class="shipping-head">
+      <div>
+        <h2>출고관리 시스템</h2>
+        <p>출고 날짜를 선택하면 해당 날짜 출고 건만 확인할 수 있습니다.</p>
+      </div>
+      <div class="shipping-date-controls">
+        <button class="refresh" id="prevShipDate" type="button">◀ 전날</button>
+        <input id="shippingFilterDate" type="date">
+        <button class="refresh" id="nextShipDate" type="button">다음날 ▶</button>
+        <button class="refresh" id="todayShipDate" type="button">오늘</button>
+      </div>
+    </div>
+    <div class="shipping-summary">
+      <span>선택일 출고 예정</span>
+      <b id="shippingCount">0</b>
+    </div>
+    <div id="shippingList" class="shipping-list"></div>
+  </section>
+
 </main>
-<script src="supabase-common.js?v=20260811-1621"></script>
-<script src="office.js?v=20260811-1640"></script>
+<script src="supabase-common.js?v=20260812-0845"></script>
+<script src="office.js?v=20260812-0845"></script>
 </body></html>
