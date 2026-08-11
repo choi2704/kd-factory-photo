@@ -164,3 +164,23 @@ textarea{resize:vertical}
   opacity:.6;
   cursor:default;
 }
+
+
+.summary-card{
+  text-align:left;
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+  font-family:inherit;
+}
+.summary-filter{
+  transition:.15s ease;
+}
+.summary-filter:hover{
+  transform:translateY(-1px);
+  border-color:#9fb7c8;
+}
+.summary-filter.active{
+  border:3px solid var(--navy) !important;
+  box-shadow:0 0 0 2px rgba(22,58,89,.08);
+}

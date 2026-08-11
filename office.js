@@ -2,6 +2,8 @@ const listEl = document.getElementById("list");
 const notice = document.getElementById("notice");
 
 let editingId = null;
+let currentStatusFilter = "all";
+let cachedRows = [];
 
 if(!configured){
   notice.classList.add("show");
@@ -9,6 +11,15 @@ if(!configured){
 }else{
   document.getElementById("syncText").textContent="실시간 연결됨";
 }
+
+document.querySelectorAll(".summary-filter").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".summary-filter").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentStatusFilter = btn.dataset.status;
+    render(cachedRows);
+  });
+});
 
 async function loadOrders(){
   if(!configured){
@@ -26,7 +37,8 @@ async function loadOrders(){
     return;
   }
 
-  render(data||[]);
+  cachedRows = data || [];
+  render(cachedRows);
 }
 
 function render(rows){
@@ -34,12 +46,21 @@ function render(rows){
   workingCount.textContent=rows.filter(x=>x.status==="working").length;
   doneCount.textContent=rows.filter(x=>x.status==="done").length;
 
-  if(!rows.length){
-    listEl.innerHTML='<div class="empty">등록된 주문이 없습니다.</div>';
+  const filtered = currentStatusFilter === "all"
+    ? rows
+    : rows.filter(x=>x.status===currentStatusFilter);
+
+  if(!filtered.length){
+    const msg = currentStatusFilter==="working"
+      ? "작업중인 주문이 없습니다."
+      : currentStatusFilter==="done"
+      ? "작업완료된 주문이 없습니다."
+      : "등록된 주문이 없습니다.";
+    listEl.innerHTML='<div class="empty">'+msg+'</div>';
     return;
   }
 
-  listEl.innerHTML=rows.map(o=>`
+  listEl.innerHTML=filtered.map(o=>`
     <div class="row">
       <div>
         <div class="customer">${esc(o.customer)}</div>
