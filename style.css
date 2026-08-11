@@ -146,3 +146,21 @@ textarea{resize:vertical}
     font-size:18px !important;
   }
 }
+
+
+.undo-complete{
+  width:100%;
+  margin-top:14px;
+  border:2px solid #c05a2a;
+  border-radius:14px;
+  padding:18px 12px;
+  background:#fff4ed;
+  color:#a9471d;
+  font-size:24px;
+  font-weight:900;
+  cursor:pointer;
+}
+.undo-complete:disabled{
+  opacity:.6;
+  cursor:default;
+}

@@ -43,6 +43,7 @@ function render(rows){
         <span class="badge done">✓ 작업완료</span>
         ${o.completed_at?`<div class="factory-info"><b>완료</b>${fmtDate(o.completed_at)}</div>`:""}
         ${o.photo_url?`<a href="${esc(o.photo_url)}" target="_blank"><img class="done-photo-large" src="${esc(o.photo_url)}"></a>`:""}
+        <button class="undo-complete">작업완료 취소 → 작업중으로</button>
       `}
     </article>`).join("");
 
@@ -51,6 +52,7 @@ function render(rows){
     const input=card.querySelector(".photo-input");
     const preview=card.querySelector(".preview");
     const btn=card.querySelector(".big-complete");
+    const undoBtn=card.querySelector(".undo-complete");
     if(input && preview){
       input.onchange=()=>{
         const f=input.files?.[0];
@@ -60,6 +62,7 @@ function render(rows){
       };
     }
     if(btn) btn.onclick=()=>completeOrder(id, input, btn);
+    if(undoBtn) undoBtn.onclick=()=>undoComplete(id, undoBtn);
   });
 }
 
@@ -87,6 +90,31 @@ async function completeOrder(id,input,btn){
   }).eq("id",id);
 
   if(updateErr){alert("완료 처리 오류: "+updateErr.message);btn.disabled=false;btn.textContent="작업완료";return}
+  loadOrders();
+}
+
+
+async function undoComplete(id, btn){
+  if(!confirm("작업완료를 취소하고 다시 작업중으로 돌릴까요?")) return;
+
+  btn.disabled = true;
+  btn.textContent = "작업중으로 변경 중...";
+
+  const {error} = await db
+    .from("production_orders")
+    .update({
+      status:"working",
+      completed_at:null
+    })
+    .eq("id",id);
+
+  if(error){
+    alert("상태 변경 오류: " + connectionHelp(error));
+    btn.disabled = false;
+    btn.textContent = "작업완료 취소 → 작업중으로";
+    return;
+  }
+
   loadOrders();
 }
 
