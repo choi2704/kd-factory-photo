@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사무실 - 강동자바라 제작관리</title>
-<link rel="stylesheet" href="style.css?v=20260811-1545">
+<link rel="stylesheet" href="style.css?v=20260811-1601">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=20260811-1545"></script>
+<script src="config.js?v=20260811-1601"></script>
 </head>
 <body>
 <header class="header">
@@ -21,14 +21,15 @@
   </div>
   <div class="grid">
     <section class="panel">
-      <h2>새 주문 등록</h2>
+      <h2 id="formTitle">새 주문 등록</h2>
       <form id="orderForm">
         <label>업체명 / 고객명<input id="customer" required></label>
         <label>연락처<input id="phone"></label>
         <label>주소<textarea id="address" rows="2"></textarea></label>
         <label>주문내역<textarea id="items" rows="5" required></textarea></label>
         <label>메모<textarea id="memo" rows="2"></textarea></label>
-        <button class="primary" type="submit">주문 등록</button>
+        <button class="primary" id="submitBtn" type="submit">주문 등록</button>
+        <button class="refresh" id="cancelEditBtn" type="button" style="display:none;width:100%;margin-top:8px">수정 취소</button>
       </form>
     </section>
     <section class="panel">
@@ -39,6 +40,6 @@
     </section>
   </div>
 </main>
-<script src="supabase-common.js?v=20260811-1545"></script>
-<script src="office.js?v=20260811-1545"></script>
+<script src="supabase-common.js?v=20260811-1601"></script>
+<script src="office.js?v=20260811-1601"></script>
 </body></html>

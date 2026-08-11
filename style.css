@@ -71,3 +71,13 @@ textarea{resize:vertical}
   main{padding:12px}.summary-card b{font-size:23px}.factory-customer{font-size:31px}
   .factory-order div{font-size:22px}.big-complete{font-size:29px}
 }
+
+.edit-btn{
+  border:1px solid #9ec0d8;
+  background:#eef7fd;
+  color:#1f6b9d;
+  border-radius:8px;
+  padding:8px 10px;
+  font-weight:900;
+  cursor:pointer;
+}
