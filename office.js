@@ -36,15 +36,15 @@ document.querySelectorAll(".summary-filter").forEach(btn=>{
   });
 });
 
-prevMonth.onclick=()=>{
+document.getElementById("prevMonth").onclick=()=>{
   calendarDate.setMonth(calendarDate.getMonth()-1);
   renderCalendar(cachedRows);
 };
-nextMonth.onclick=()=>{
+document.getElementById("nextMonth").onclick=()=>{
   calendarDate.setMonth(calendarDate.getMonth()+1);
   renderCalendar(cachedRows);
 };
-todayMonth.onclick=()=>{
+document.getElementById("todayMonth").onclick=()=>{
   calendarDate = new Date();
   renderCalendar(cachedRows);
 };
@@ -106,7 +106,7 @@ function render(rows){
 function renderCalendar(rows){
   const y=calendarDate.getFullYear();
   const m=calendarDate.getMonth();
-  calendarTitle.textContent=`${y}년 ${m+1}월`;
+  document.getElementById("calendarTitle").textContent=`${y}년 ${m+1}월`;
 
   const first=new Date(y,m,1);
   const last=new Date(y,m+1,0);

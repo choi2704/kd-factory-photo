@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사무실 - 강동자바라 제작관리</title>
-<link rel="stylesheet" href="style.css?v=20260812-0915">
+<link rel="stylesheet" href="style.css?v=20260812-0925">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=20260812-0915"></script>
+<script src="config.js?v=20260812-0925"></script>
 </head>
 <body>
 <header class="header">
@@ -25,6 +25,23 @@
       <span>작업완료</span><b id="doneCount">0</b>
     </button>
   </div>
+
+  <section class="panel shipping-panel">
+    <div class="shipping-head">
+      <div>
+        <h2>출고관리</h2>
+        <p>달력에서 상호명을 누르면 입력내용을 새창으로 확인할 수 있습니다.</p>
+      </div>
+      <div class="shipping-date-controls">
+        <button class="refresh" id="prevMonth" type="button">◀ 이전달</button>
+        <strong id="calendarTitle"></strong>
+        <button class="refresh" id="nextMonth" type="button">다음달 ▶</button>
+        <button class="refresh" id="todayMonth" type="button">이번달</button>
+      </div>
+    </div>
+    <div id="shippingCalendar" class="shipping-calendar"></div>
+  </section>
+
   <div class="grid">
     <section class="panel">
       <h2 id="formTitle">새 주문 등록</h2>
@@ -48,6 +65,6 @@
     </section>
   </div>
 </main>
-<script src="supabase-common.js?v=20260812-0915"></script>
-<script src="office.js?v=20260812-0915"></script>
+<script src="supabase-common.js?v=20260812-0925"></script>
+<script src="office.js?v=20260812-0925"></script>
 </body></html>
