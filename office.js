@@ -79,7 +79,7 @@ function render(rows){
         ${esc(o.items)}
         ${o.phone?`\n연락처: ${esc(o.phone)}`:""}
         ${o.address?`\n주소: ${esc(o.address)}`:""}
-        ${o.delivery_details?`\n배송: ${esc(o.delivery_details)}`:""}
+        ${o.delivery_details?`\n배송: ${esc(o.delivery_details)}`:""}${o.hanam_office?`\n하남 사무실 이동`:""}
         ${o.memo?`\n메모: ${esc(o.memo)}`:""}
       </div>
 
@@ -107,7 +107,7 @@ function startEdit(id, rows){
   phone.value = order.phone || "";
   address.value = order.address || "";
   shipDate.value = order.ship_date || todayISO();
-  deliveryDetails.value = order.delivery_details || "";
+  deliveryDetails.value = order.delivery_details || "";\n  hanamOffice.checked = !!order.hanam_office;
   items.value = order.items || "";
   memo.value = order.memo || "";
 

@@ -86,7 +86,7 @@ function renderCalendar(){
         <div class="cal-date">${d}</div>
         <div class="cal-orders">
           ${dayRows.map(o=>`
-            <button class="cal-company" data-id="${o.id}" type="button">
+            <button class="cal-company ${o.hanam_office ? "hanam" : ""}" data-id="${o.id}" type="button">
               ${esc(o.customer)}
             </button>
           `).join("")}
@@ -133,7 +133,7 @@ function openOrderPopup(id){
         <div class="row"><div class="label">연락처</div><div class="value">${esc(o.phone||"-")}</div></div>
         <div class="row"><div class="label">주소</div><div class="value">${esc(o.address||"-")}</div></div>
         <div class="row"><div class="label">주문내역</div><div class="value">${esc(o.items||"-")}</div></div>
-        <div class="row"><div class="label">배송내용</div><div class="value">${esc(o.delivery_details||"-")}</div></div>
+        <div class="row"><div class="label">배송내용</div><div class="value">${esc(o.delivery_details||"-")}</div></div>\n        <div class="row"><div class="label">출고 구분</div><div class="value">${o.hanam_office ? "하남 사무실 이동" : "당일 출고"}</div></div>
         <div class="row"><div class="label">메모</div><div class="value">${esc(o.memo||"-")}</div></div>
         ${o.photo_url?`<div class="row"><div class="label">작업완료 사진</div><img src="${esc(o.photo_url)}"></div>`:""}
       </div>
