@@ -287,3 +287,7 @@ textarea{resize:vertical}
   .cal-cell{min-height:90px;padding:5px}
   .cal-company{font-size:12px;padding:5px}
 }
+
+
+.header-links{display:flex;gap:8px;flex-wrap:wrap}
+.shipping-page-panel{margin-top:0}

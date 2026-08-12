@@ -86,3 +86,10 @@ Supabase SQL Editor에서 `shipping_migration.sql` 내용을 실행해야 합니
 - 달력 버튼 요소를 명시적으로 연결해 페이지 로딩 중 JS 중단 문제 수정
 - 기존 Supabase 연결정보(config.js) 그대로 유지
 - 기존 주문 데이터는 Supabase에 그대로 유지되며 다시 표시됩니다.
+
+## 출고관리 별도 페이지
+- 제작관리 메인(office.html)에서는 새 주문 등록 + 주문현황 3열만 표시
+- 상단 `출고관리` 버튼을 누르면 shipping.html로 이동
+- shipping.html에서 월 달력 확인
+- 출고일에는 상호명만 표시
+- 상호 클릭 시 새창 상세보기

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>출고관리 - 강동자바라</title>
+<link rel="stylesheet" href="style.css?v=20260812-0922">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=20260812-0922"></script>
+</head>
+<body>
+<header class="header">
+  <div>
+    <h1>출고관리</h1>
+    <p>출고 날짜별 상호 확인</p>
+    <div class="sync" id="syncText">연결 확인 중</div>
+  </div>
+  <div class="header-links">
+    <a href="office.html">← 제작관리 메인</a>
+    <a href="factory.html">📱 공장화면</a>
+  </div>
+</header>
+
+<main>
+  <div id="notice" class="notice">Supabase 설정 전입니다. config.js를 확인해 주세요.</div>
+
+  <section class="panel shipping-panel shipping-page-panel">
+    <div class="shipping-head">
+      <div>
+        <h2>출고 달력</h2>
+        <p>날짜에 표시된 상호명을 누르면 상세내용이 새창으로 열립니다.</p>
+      </div>
+      <div class="shipping-date-controls">
+        <button class="refresh" id="prevMonth" type="button">◀ 이전달</button>
+        <strong id="calendarTitle"></strong>
+        <button class="refresh" id="nextMonth" type="button">다음달 ▶</button>
+        <button class="refresh" id="todayMonth" type="button">이번달</button>
+      </div>
+    </div>
+    <div id="shippingCalendar" class="shipping-calendar"></div>
+  </section>
+</main>
+
+<script src="supabase-common.js?v=20260812-0922"></script>
+<script src="shipping.js?v=20260812-0922"></script>
+</body>
+</html>
