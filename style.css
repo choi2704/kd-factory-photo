@@ -291,3 +291,64 @@ textarea{resize:vertical}
 
 .header-links{display:flex;gap:8px;flex-wrap:wrap}
 .shipping-page-panel{margin-top:0}
+
+
+/* 제작관리 메인 주문현황: PC에서 한 줄에 정확히 3개 */
+#list.list{
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  gap:12px !important;
+  align-items:start;
+}
+
+#list .order-card-3col{
+  display:flex !important;
+  flex-direction:column !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:245px !important;
+  padding:14px !important;
+  margin:0 !important;
+}
+
+#list .order-card-3col .customer{
+  font-size:23px !important;
+  line-height:1.25 !important;
+}
+
+#list .order-card-3col .details{
+  flex:1;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  overflow-wrap:anywhere;
+}
+
+#list .order-card-3col .action-row{
+  margin-top:10px;
+  justify-content:flex-end;
+}
+
+/* 주문현황 공간을 넓게 확보 */
+.office-grid,
+.grid{
+  grid-template-columns:360px minmax(0,1fr) !important;
+}
+
+main{
+  max-width:1700px !important;
+}
+
+@media(max-width:1250px){
+  #list.list{
+    grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:850px){
+  .office-grid,
+  .grid{
+    grid-template-columns:1fr !important;
+  }
+  #list.list{
+    grid-template-columns:1fr !important;
+  }
+}
