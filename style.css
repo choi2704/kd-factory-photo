@@ -209,3 +209,81 @@ textarea{resize:vertical}
   .shipping-date-controls input[type="date"]{flex:1;min-width:160px}
   .shipping-list{grid-template-columns:1fr}
 }
+
+
+/* 혼자 쓰는 사무실 화면: 주문 한 줄에 3개 */
+.office-list{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:12px !important;
+}
+.office-item,.row.order-card-3col{
+  display:flex !important;
+  flex-direction:column !important;
+  min-height:270px;
+  padding:16px !important;
+}
+.row.order-card-3col .details{
+  flex:1;
+}
+.row.order-card-3col .action-row{
+  margin-top:10px;
+  justify-content:flex-end;
+}
+
+/* 출고 달력 */
+.shipping-panel{margin-bottom:18px}
+.shipping-date-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#calendarTitle{font-size:22px;color:var(--navy);min-width:120px;text-align:center}
+.shipping-calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:white;
+}
+.cal-head{
+  background:#eef4f8;
+  padding:10px 6px;
+  text-align:center;
+  font-weight:900;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.cal-head.sun{color:#c43d3d}
+.cal-head.sat{color:#2b6da8}
+.cal-cell{
+  min-height:120px;
+  padding:8px;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:#fff;
+}
+.cal-cell.today{background:#fff8df}
+.cal-cell.empty-cell{background:#f8fafb}
+.cal-date{font-size:18px;font-weight:900;margin-bottom:7px}
+.cal-orders{display:flex;flex-direction:column;gap:5px}
+.cal-company{
+  width:100%;
+  border:0;
+  border-radius:7px;
+  padding:6px 7px;
+  background:#e8f2f9;
+  color:#123b5d;
+  font-size:14px;
+  font-weight:900;
+  text-align:left;
+  cursor:pointer;
+}
+.cal-company:hover{background:#d9eaf6}
+
+@media(max-width:1100px){
+  .office-list{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+}
+@media(max-width:720px){
+  .office-list{grid-template-columns:1fr !important}
+  .shipping-calendar{font-size:12px}
+  .cal-cell{min-height:90px;padding:5px}
+  .cal-company{font-size:12px;padding:5px}
+}
