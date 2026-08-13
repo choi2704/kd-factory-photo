@@ -88,7 +88,9 @@ function renderCalendar(){
         <div class="cal-date">${d}</div>
         <div class="cal-orders">
           ${dayRows.map(o=>`
-           ${esc(o.customer)}${o.status==="done" ? " (완)" : ""}
+            <button class="cal-company ${o.hanam_office ? "hanam" : ""}" data-id="${o.id}" type="button">
+              ${esc(o.customer)}${o.status==="done" ? " (완)" : ""}
+            </button>
           `).join("")}
         </div>
       </div>

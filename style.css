@@ -386,3 +386,8 @@ main{
 .cal-company.hanam:hover{
   background:#f9d3df !important;
 }
+
+/* 출고달력 작업완료 표시 */
+.cal-company{
+  font-weight:900 !important;
+}

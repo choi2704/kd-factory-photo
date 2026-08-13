@@ -109,3 +109,9 @@ Supabase SQL Editor에서 `shipping_migration.sql` 내용을 실행해야 합니
 
 ### 최초 1회
 Supabase SQL Editor에서 `hanam_migration.sql` 내용을 실행해야 합니다.
+
+## 출고달력 최종 수정
+- 일반 출고: 파란색
+- 하남 사무실 이동: 분홍색
+- 공장에서 작업완료 상태(done)가 되면 상호명 뒤에 `(완)` 자동 표시
+- 상호 클릭 상세 팝업 유지
