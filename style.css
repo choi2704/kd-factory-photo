@@ -391,3 +391,160 @@ main{
 .cal-company{
   font-weight:900 !important;
 }
+
+
+/* ===== 화물 배차관리 ===== */
+.dispatch-summary{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:16px;
+}
+.dispatch-summary-card{
+  min-height:104px;
+  border:2px solid #d5e1e9;
+  border-radius:14px;
+  background:#fff;
+  padding:16px 18px;
+  text-align:left;
+  cursor:pointer;
+}
+.dispatch-summary-card span{
+  display:block;
+  font-size:18px;
+  font-weight:900;
+  color:#536a79;
+}
+.dispatch-summary-card b{
+  display:block;
+  margin-top:7px;
+  font-size:36px;
+  line-height:1;
+  color:#132c3e;
+}
+.dispatch-summary-card.wait b{color:#d94747}
+.dispatch-summary-card.assigned b{color:#e48613}
+.dispatch-summary-card.delivered b{color:#279548}
+.dispatch-summary-card.active{border-color:#163f5c;box-shadow:0 0 0 2px rgba(22,63,92,.08)}
+
+.dispatch-panel{padding:20px}
+.dispatch-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px}
+.dispatch-toolbar h2{margin:0 0 5px;font-size:28px}
+.dispatch-toolbar p{margin:0;color:#607687;font-size:16px}
+.dispatch-toolbar-actions{display:flex;gap:8px;align-items:center}
+.dispatch-search{width:230px !important;font-size:18px !important;padding:12px 14px !important}
+
+.dispatch-list{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.dispatch-card{
+  display:block;
+  width:100%;
+  min-height:265px;
+  border:2px solid #d8e3ea;
+  border-radius:14px;
+  background:#fff;
+  padding:18px;
+  text-align:left;
+  cursor:pointer;
+}
+.dispatch-card:hover{border-color:#6fa3c4;background:#fbfdff}
+.dispatch-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.dispatch-customer{font-size:23px;font-weight:950;color:#102b3f;line-height:1.25}
+.dispatch-shipdate{margin-top:7px;font-size:16px;font-weight:900;color:#1671a7}
+.dispatch-badge{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:8px 11px;
+  font-size:15px;
+  font-weight:950;
+}
+.dispatch-badge.waiting{background:#ffe7e7;color:#ca3434}
+.dispatch-badge.assigned{background:#fff0d9;color:#c66a00}
+.dispatch-badge.delivered{background:#e5f6e8;color:#268642}
+.dispatch-items{
+  white-space:pre-wrap;
+  min-height:74px;
+  margin:20px 0 15px;
+  font-size:18px;
+  font-weight:850;
+  line-height:1.55;
+  color:#183347;
+}
+.dispatch-card-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  border-top:1px solid #e2e9ee;
+  padding-top:13px;
+}
+.dispatch-card-info div span{display:block;font-size:13px;color:#71838f;font-weight:800}
+.dispatch-card-info div b{display:block;margin-top:3px;font-size:16px;color:#182f40;word-break:break-all}
+
+.dispatch-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.45);
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding:30px 15px;
+  overflow:auto;
+}
+.dispatch-modal.show{display:flex}
+.dispatch-modal-box{
+  width:min(760px,100%);
+  background:#fff;
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 18px 50px rgba(0,0,0,.25);
+}
+.dispatch-modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:18px}
+.dispatch-modal-head h2{font-size:30px;margin:0}
+.dispatch-modal-sub{font-size:18px;font-weight:900;color:#1671a7;margin-top:5px}
+.dispatch-close{width:48px;height:48px;border:1px solid #ccd9e1;border-radius:10px;background:#fff;font-size:23px;font-weight:900;cursor:pointer}
+.dispatch-order-info{background:#f3f8fb;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.dispatch-order-info div{padding:7px 0;border-bottom:1px solid #dce7ed}
+.dispatch-order-info div:last-child{border-bottom:0}
+.dispatch-order-info span{display:block;font-size:13px;color:#6c7e89;font-weight:800;margin-bottom:3px}
+.dispatch-order-info b{font-size:17px;white-space:pre-wrap}
+.dispatch-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dispatch-modal label{font-size:17px;font-weight:900}
+.dispatch-modal input,.dispatch-modal textarea{font-size:19px !important}
+.receipt-preview-wrap{text-align:center;margin:8px 0 16px}
+.receipt-preview{max-width:100%;max-height:330px;border:2px solid #dbe5eb;border-radius:10px}
+.dispatch-status-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.dispatch-state{
+  min-height:58px;
+  border:2px solid #d9e3e9;
+  border-radius:10px;
+  background:#fff;
+  font-size:19px;
+  font-weight:950;
+  cursor:pointer;
+}
+.dispatch-state.waiting.active{background:#ffe7e7;border-color:#e86363;color:#bd3030}
+.dispatch-state.assigned.active{background:#fff0d9;border-color:#f1a23f;color:#b65d00}
+.dispatch-state.delivered.active{background:#e5f6e8;border-color:#62b879;color:#237c3b}
+.dispatch-save{width:100%;font-size:22px !important;min-height:60px}
+
+@media(max-width:1000px){
+  .dispatch-summary{grid-template-columns:1fr 1fr}
+  .dispatch-list{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .dispatch-summary{grid-template-columns:1fr 1fr}
+  .dispatch-summary-card{min-height:90px;padding:13px}
+  .dispatch-summary-card span{font-size:16px}
+  .dispatch-summary-card b{font-size:30px}
+  .dispatch-toolbar{align-items:stretch;flex-direction:column}
+  .dispatch-toolbar-actions{flex-direction:column;align-items:stretch}
+  .dispatch-search{width:100% !important}
+  .dispatch-list{grid-template-columns:1fr}
+  .dispatch-card{min-height:auto}
+  .dispatch-form-grid{grid-template-columns:1fr}
+  .dispatch-status-buttons{grid-template-columns:1fr}
+}

@@ -17,6 +17,13 @@ function todayISO(){
   const day = String(d.getDate()).padStart(2,"0");
   return `${y}-${m}-${day}`;
 }
+
+function stateLabelShipping(v){
+  if(v==="assigned") return "배차완료";
+  if(v==="delivered") return "배송완료";
+  return "배차대기";
+}
+
 function dateKey(y,m,d){
   return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
 }
@@ -89,7 +96,7 @@ function renderCalendar(){
         <div class="cal-orders">
           ${dayRows.map(o=>`
             <button class="cal-company ${o.hanam_office ? "hanam" : ""}" data-id="${o.id}" type="button">
-              ${esc(o.customer)}${o.status==="done" ? " (완)" : ""}
+              ${esc(o.customer)}${o.status==="done" ? " (완)" : ""}${o.dispatch_status==="assigned" ? " 🚚" : ""}${o.dispatch_status==="delivered" ? " (배송완)" : ""}
             </button>
           `).join("")}
         </div>
@@ -137,6 +144,8 @@ function openOrderPopup(id){
         <span class="status">${o.status==="done"?"✓ 작업완료":"작업중"}</span>
         <div class="row"><div class="label">출고일</div><div class="value">${esc(o.ship_date||"-")}</div></div>
         <div class="row"><div class="label">출고 구분</div><div class="value">${o.hanam_office ? "하남 사무실 이동" : "당일 출고"}</div></div>
+        <div class="row"><div class="label">배차 상태</div><div class="value">${stateLabelShipping(o.dispatch_status)}</div></div>
+        <div class="row"><div class="label">배차 정보</div><div class="value">${esc([o.dispatch_vehicle,o.dispatch_driver,o.dispatch_driver_phone].filter(Boolean).join(" / ") || "-")}</div></div>
         <div class="row"><div class="label">연락처</div><div class="value">${esc(o.phone||"-")}</div></div>
         <div class="row"><div class="label">주소</div><div class="value">${esc(o.address||"-")}</div></div>
         <div class="row"><div class="label">주문내역</div><div class="value">${esc(o.items||"-")}</div></div>

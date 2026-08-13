@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>화물 배차관리 - 강동자바라</title>
+<link rel="stylesheet" href="style.css?v=20260813-dispatch1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=20260812-1420"></script>
+</head>
+<body>
+<header class="header">
+  <div>
+    <h1>🚚 화물 배차관리</h1>
+    <p>출고 주문을 불러와 배차정보를 간단하게 관리합니다.</p>
+    <div class="sync" id="syncText">연결 확인 중</div>
+  </div>
+  <div class="header-links">
+    <a href="office.html">← 제작관리</a>
+    <a href="shipping.html">📅 출고달력</a>
+    <a href="factory.html">📱 공장화면</a>
+  </div>
+</header>
+
+<main>
+  <div id="notice" class="notice">Supabase 설정 전입니다. config.js를 확인해 주세요.</div>
+
+  <div class="dispatch-summary">
+    <button class="dispatch-summary-card active" data-filter="all"><span>전체</span><b id="dispatchAll">0</b></button>
+    <button class="dispatch-summary-card wait" data-filter="waiting"><span>배차대기</span><b id="dispatchWaiting">0</b></button>
+    <button class="dispatch-summary-card assigned" data-filter="assigned"><span>배차완료</span><b id="dispatchAssigned">0</b></button>
+    <button class="dispatch-summary-card delivered" data-filter="delivered"><span>배송완료</span><b id="dispatchDelivered">0</b></button>
+  </div>
+
+  <section class="panel dispatch-panel">
+    <div class="dispatch-toolbar">
+      <div>
+        <h2>배차 현황</h2>
+        <p>상호명을 누르면 배차정보를 입력하거나 수정할 수 있습니다.</p>
+      </div>
+      <div class="dispatch-toolbar-actions">
+        <input id="dispatchSearch" class="dispatch-search" placeholder="상호명 검색">
+        <button class="refresh" id="dispatchRefresh" type="button">새로고침</button>
+      </div>
+    </div>
+    <div id="dispatchList" class="dispatch-list"></div>
+  </section>
+</main>
+
+<div id="dispatchModal" class="dispatch-modal" aria-hidden="true">
+  <div class="dispatch-modal-box">
+    <div class="dispatch-modal-head">
+      <div>
+        <h2 id="dispatchModalTitle">배차정보</h2>
+        <div id="dispatchModalSub" class="dispatch-modal-sub"></div>
+      </div>
+      <button id="dispatchClose" class="dispatch-close" type="button">✕</button>
+    </div>
+
+    <div class="dispatch-order-info" id="dispatchOrderInfo"></div>
+
+    <form id="dispatchForm">
+      <input type="hidden" id="dispatchOrderId">
+
+      <label>물품인수증 사진
+        <input id="dispatchReceipt" type="file" accept="image/*">
+      </label>
+      <div id="receiptPreviewWrap" class="receipt-preview-wrap" style="display:none">
+        <img id="receiptPreview" class="receipt-preview" alt="물품인수증">
+      </div>
+
+      <div class="dispatch-form-grid">
+        <label>차량번호<input id="dispatchVehicle" placeholder="예: 91자8745"></label>
+        <label>기사명<input id="dispatchDriver" placeholder="예: 정원모"></label>
+        <label>기사 연락처<input id="dispatchDriverPhone" inputmode="tel" placeholder="010-0000-0000"></label>
+        <label>운임<input id="dispatchFee" inputmode="numeric" placeholder="예: 80000"></label>
+      </div>
+
+      <label>배차 메모
+        <textarea id="dispatchMemo" rows="3" placeholder="예: 오전 도착 / 현장 연락 후 진입"></textarea>
+      </label>
+
+      <div class="dispatch-status-buttons">
+        <button type="button" class="dispatch-state waiting" data-state="waiting">배차대기</button>
+        <button type="button" class="dispatch-state assigned" data-state="assigned">배차완료</button>
+        <button type="button" class="dispatch-state delivered" data-state="delivered">배송완료</button>
+      </div>
+
+      <button class="primary dispatch-save" type="submit">저장</button>
+    </form>
+  </div>
+</div>
+
+<script src="supabase-common.js?v=20260812-1420"></script>
+<script src="dispatch.js?v=20260813-dispatch1"></script>
+</body>
+</html>
