@@ -1,3 +1,5 @@
+let factoryCachedRows = [];
+let factorySearchQuery = "";
 
 const root = document.getElementById("factoryList");
 const notice = document.getElementById("notice");
@@ -19,7 +21,8 @@ async function loadOrders(){
   if(!configured){root.innerHTML='<div class="empty">config.js 설정 후 사용 가능합니다.</div>';return}
   const {data,error}=await db.from("production_orders").select("*").eq("status",currentFilter).order("created_at",{ascending:true});
   if(error){root.innerHTML='<div class="empty">'+esc(connectionHelp(error))+'</div>';return}
-  render(data||[]);
+  factoryCachedRows = data || [];
+  renderFactoryFiltered();
 }
 
 function render(rows){
@@ -160,4 +163,42 @@ if(configured){
     .on("postgres_changes",{event:"*",schema:"public",table:"production_orders"},()=>loadOrders())
     .subscribe();
 }
+
+function renderFactoryFiltered(){
+  const q = factorySearchQuery.trim().toLowerCase();
+  const rows = !q ? factoryCachedRows : factoryCachedRows.filter(o=>{
+    const text = [
+      o.customer,
+      o.items,
+      o.phone,
+      o.address,
+      o.delivery_details,
+      o.memo
+    ].filter(Boolean).join(" ").toLowerCase();
+    return text.includes(q);
+  });
+  render(rows);
+}
+
+function bindFactorySearch(){
+  const input = document.getElementById("factorySearch");
+  const clearBtn = document.getElementById("factorySearchClear");
+  if(!input) return;
+
+  input.addEventListener("input",()=>{
+    factorySearchQuery = input.value;
+    renderFactoryFiltered();
+  });
+
+  if(clearBtn){
+    clearBtn.addEventListener("click",()=>{
+      input.value = "";
+      factorySearchQuery = "";
+      renderFactoryFiltered();
+      input.focus();
+    });
+  }
+}
+
+bindFactorySearch();
 loadOrders();
