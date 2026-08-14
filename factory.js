@@ -33,12 +33,21 @@ function render(rows){
       ${o.memo?`<div class="factory-info"><b>메모</b>${esc(o.memo)}</div>`:""}
       ${o.status==="working" ? `
         <div class="photo-area">
-          <div class="photo-title">📷 작업완료 사진</div>
-          <input class="photo-input" type="file" accept="image/*" capture="environment">
+          <div class="photo-title">📷 작업완료 사진 <span class="photo-optional">(선택)</span></div>
+          <div class="photo-choice-row">
+            <label class="photo-choice camera-choice">
+              📷 지금 촬영
+              <input class="photo-camera-input" type="file" accept="image/*" capture="environment">
+            </label>
+            <label class="photo-choice album-choice">
+              🖼 앨범에서 선택
+              <input class="photo-album-input" type="file" accept="image/*">
+            </label>
+          </div>
           <img class="preview" alt="미리보기">
-          <div class="photo-required">사진을 찍거나 선택해야 작업완료 처리할 수 있습니다.</div>
+          <div class="photo-help">사진이 없어도 바로 작업완료할 수 있습니다.</div>
         </div>
-        <button class="big-complete">작업완료</button>
+        <button class="big-complete">✓ 작업완료</button>
       ` : `
         <span class="badge done">✓ 작업완료</span>
         ${o.completed_at?`<div class="factory-info"><b>완료</b>${fmtDate(o.completed_at)}</div>`:""}
@@ -49,47 +58,75 @@ function render(rows){
 
   root.querySelectorAll(".order-card").forEach(card=>{
     const id=card.dataset.id;
-    const input=card.querySelector(".photo-input");
+    const cameraInput=card.querySelector(".photo-camera-input");
+    const albumInput=card.querySelector(".photo-album-input");
     const preview=card.querySelector(".preview");
     const btn=card.querySelector(".big-complete");
     const undoBtn=card.querySelector(".undo-complete");
-    if(input && preview){
-      input.onchange=()=>{
-        const f=input.files?.[0];
-        if(!f){preview.style.display="none";return}
-        preview.src=URL.createObjectURL(f);
-        preview.style.display="block";
-      };
+
+    const setPreview=(input,otherInput)=>{
+      const f=input?.files?.[0];
+      if(!f){preview.style.display="none";return}
+      if(otherInput) otherInput.value="";
+      preview.src=URL.createObjectURL(f);
+      preview.style.display="block";
+    };
+
+    if(cameraInput && preview){
+      cameraInput.onchange=()=>setPreview(cameraInput,albumInput);
     }
-    if(btn) btn.onclick=()=>completeOrder(id, input, btn);
+    if(albumInput && preview){
+      albumInput.onchange=()=>setPreview(albumInput,cameraInput);
+    }
+
+    if(btn) btn.onclick=()=>completeOrder(id, cameraInput, albumInput, btn);
     if(undoBtn) undoBtn.onclick=()=>undoComplete(id, undoBtn);
   });
 }
 
-async function completeOrder(id,input,btn){
-  const file=input?.files?.[0];
-  if(!file){alert("작업완료 사진을 먼저 찍어주세요.");return}
-  if(!confirm("사진과 함께 작업완료 처리할까요?")) return;
+async function completeOrder(id,cameraInput,albumInput,btn){
+  const file=cameraInput?.files?.[0] || albumInput?.files?.[0] || null;
+  const message=file ? "사진과 함께 작업완료 처리할까요?" : "사진 없이 작업완료 처리할까요?";
+  if(!confirm(message)) return;
 
-  btn.disabled=true; btn.textContent="사진 업로드 중...";
+  btn.disabled=true;
+  btn.textContent=file ? "사진 업로드 중..." : "완료 처리 중...";
 
-  const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
-  const path=`${id}/${Date.now()}.${ext}`;
-  const {error:upErr}=await db.storage.from("completion-photos").upload(path,file,{
-    cacheControl:"3600",upsert:false,contentType:file.type||"image/jpeg"
-  });
-  if(upErr){alert("사진 업로드 오류: "+upErr.message);btn.disabled=false;btn.textContent="작업완료";return}
+  let photo_url=null;
 
-  const {data:urlData}=db.storage.from("completion-photos").getPublicUrl(path);
-  const photo_url=urlData.publicUrl;
+  if(file){
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+    const path=`${id}/${Date.now()}.${ext}`;
+    const {error:upErr}=await db.storage.from("completion-photos").upload(path,file,{
+      cacheControl:"3600",upsert:false,contentType:file.type||"image/jpeg"
+    });
 
-  const {error:updateErr}=await db.from("production_orders").update({
+    if(upErr){
+      alert("사진 업로드 오류: "+upErr.message);
+      btn.disabled=false;
+      btn.textContent="✓ 작업완료";
+      return;
+    }
+
+    const {data:urlData}=db.storage.from("completion-photos").getPublicUrl(path);
+    photo_url=urlData.publicUrl;
+  }
+
+  const payload={
     status:"done",
-    completed_at:new Date().toISOString(),
-    photo_url
-  }).eq("id",id);
+    completed_at:new Date().toISOString()
+  };
+  if(photo_url) payload.photo_url=photo_url;
 
-  if(updateErr){alert("완료 처리 오류: "+updateErr.message);btn.disabled=false;btn.textContent="작업완료";return}
+  const {error:updateErr}=await db.from("production_orders").update(payload).eq("id",id);
+
+  if(updateErr){
+    alert("완료 처리 오류: "+updateErr.message);
+    btn.disabled=false;
+    btn.textContent="✓ 작업완료";
+    return;
+  }
+
   loadOrders();
 }
 

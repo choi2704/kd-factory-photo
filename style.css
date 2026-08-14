@@ -548,3 +548,59 @@ main{
   .dispatch-form-grid{grid-template-columns:1fr}
   .dispatch-status-buttons{grid-template-columns:1fr}
 }
+
+
+/* ===== 공장 작업완료 사진 선택 개선 ===== */
+.photo-optional{
+  font-size:15px;
+  color:#6d7e89;
+  font-weight:800;
+}
+.photo-choice-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:12px 0;
+}
+.photo-choice{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  border:2px solid #b8cfdd;
+  border-radius:12px;
+  background:#fff;
+  color:#173a52;
+  font-size:19px !important;
+  font-weight:950 !important;
+  cursor:pointer;
+  text-align:center;
+}
+.photo-choice.camera-choice{
+  background:#eaf5fb;
+  border-color:#6da9cc;
+}
+.photo-choice.album-choice{
+  background:#f4f7f9;
+}
+.photo-choice input{
+  display:none !important;
+}
+.photo-help{
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#fff7df;
+  color:#795600;
+  font-size:16px;
+  font-weight:900;
+  text-align:center;
+}
+.big-complete{
+  font-size:25px !important;
+  min-height:66px !important;
+}
+@media(max-width:560px){
+  .photo-choice-row{grid-template-columns:1fr}
+  .photo-choice{min-height:62px;font-size:20px !important}
+}
