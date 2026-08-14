@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사무실 - 강동자바라 제작관리</title>
-<link rel="stylesheet" href="style.css?v=20260813-1025">
+<link rel="stylesheet" href="style.css?v=20260814-statusfilter1">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js?v=20260812-1420"></script>
 </head>
@@ -16,13 +16,13 @@
   <div id="notice" class="notice">Supabase 설정 전입니다. config.js에 URL과 Anon Key를 넣어주세요.</div>
   <div class="summary">
     <button class="summary-card summary-filter active" data-status="all" type="button">
-      <span>전체</span><b id="total">0</b>
+      <span>전체</span><b id="total">0</b><em>클릭해서 전체보기</em>
     </button>
     <button class="summary-card summary-filter" data-status="working" type="button">
-      <span>작업중</span><b id="workingCount">0</b>
+      <span>작업중</span><b id="workingCount">0</b><em>클릭해서 작업중만</em>
     </button>
     <button class="summary-card summary-filter" data-status="done" type="button">
-      <span>작업완료</span><b id="doneCount">0</b>
+      <span>작업완료</span><b id="doneCount">0</b><em>클릭해서 완료만</em>
     </button>
   </div>
 <div class="grid">
@@ -55,5 +55,5 @@
   </div>
 </main>
 <script src="supabase-common.js?v=20260812-1420"></script>
-<script src="office.js?v=20260812-1437"></script>
+<script src="office.js?v=20260814-statusfilter1"></script>
 </body></html>

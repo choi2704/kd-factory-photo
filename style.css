@@ -668,3 +668,44 @@ main{
     font-size:19px;
   }
 }
+
+
+/* ===== 사무실 제작관리 상태 필터 버튼 강조 ===== */
+.summary-card.summary-filter{
+  cursor:pointer !important;
+  transition:transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+}
+.summary-card.summary-filter:hover{
+  transform:translateY(-2px);
+  border-color:#4d8fb7 !important;
+  box-shadow:0 5px 14px rgba(28,73,102,.10);
+}
+.summary-card.summary-filter em{
+  display:block;
+  margin-top:7px;
+  font-size:13px;
+  font-style:normal;
+  font-weight:800;
+  color:#8293a0;
+}
+.summary-card.summary-filter.active{
+  border:3px solid #173f5b !important;
+  background:#edf6fb !important;
+  box-shadow:0 0 0 3px rgba(23,63,91,.08);
+}
+.summary-card.summary-filter[data-status="working"].active{
+  border-color:#e2842c !important;
+  background:#fff4e8 !important;
+}
+.summary-card.summary-filter[data-status="working"].active span,
+.summary-card.summary-filter[data-status="working"].active b{
+  color:#c95e00 !important;
+}
+.summary-card.summary-filter[data-status="done"].active{
+  border-color:#38975a !important;
+  background:#eaf7ee !important;
+}
+.summary-card.summary-filter[data-status="done"].active span,
+.summary-card.summary-filter[data-status="done"].active b{
+  color:#267944 !important;
+}

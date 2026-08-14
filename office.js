@@ -27,6 +27,14 @@ document.querySelectorAll(".summary-filter").forEach(btn=>{
     document.querySelectorAll(".summary-filter").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     currentStatusFilter = btn.dataset.status;
+    const title = document.querySelector(".list-head h2");
+    if(title){
+      title.textContent = currentStatusFilter==="working"
+        ? "주문 현황 · 작업중"
+        : currentStatusFilter==="done"
+          ? "주문 현황 · 작업완료"
+          : "주문 현황";
+    }
     render(cachedRows);
   });
 });
