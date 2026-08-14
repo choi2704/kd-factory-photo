@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>공장 - 강동자바라 제작관리</title>
-<link rel="stylesheet" href="style.css?v=20260814-search1">
+<link rel="stylesheet" href="style.css?v=20260814-search-fixed2">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js?v=20260811-1621"></script>
 </head>
@@ -18,8 +18,15 @@
     <button class="filter active" data-filter="working">작업중</button>
     <button class="filter" data-filter="done">완료</button>
   </div>
+  <div class="factory-search-wrap">
+    <label for="factorySearch">🔎 주문 검색</label>
+    <div class="factory-search-row">
+      <input id="factorySearch" type="search" placeholder="상호명 · 주문내용 · 연락처 검색">
+      <button id="factorySearchClear" type="button">전체보기</button>
+    </div>
+  </div>
   <div id="factoryList"></div>
 </div>
 <script src="supabase-common.js?v=20260811-1621"></script>
-<script src="factory.js?v=20260814-search1"></script>
+<script src="factory.js?v=20260814-search-fixed2"></script>
 </body></html>
