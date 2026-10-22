@@ -1,4 +1,4 @@
-/* 강동자바라 개인용 도면·촬영관리 v1.1 — 서버/로그인/외부 전송 없음 */
+/* 강동자바라 개인용 도면·촬영관리 v1.2 — 서버/로그인/외부 전송 없음 */
 (() => {
   'use strict';
   const DB_NAME = 'kd_personal_drawing_shoot_v1';
@@ -16,7 +16,7 @@
   let projects = [], events = [], files = [];
   let viewMonth = new Date(); viewMonth.setDate(1);
   let selectedDay = today(), currentTab = 'calendar', searchTerm = '';
-  let editingProjectId = null, editingEventId = null, detailProjectId = null, modalMedia = [];
+  let editingProjectId = null, editingEventId = null, detailProjectId = null, modalMedia = [], eventModalMedia = [];
   let toastTimeout, objectURLs = new Map();
   const strokes = [];
   let drawing = false, activeStroke = null;
@@ -102,9 +102,19 @@
     const done=e.checklist.filter(c=>c.done).length;
     return `<div class="checklist-widget"><strong>촬영 체크리스트</strong>${e.checklist.map((item,i)=>`<label><input type="checkbox" data-check-event="${esc(e.id)}" data-check-index="${i}" ${item.done?'checked':''}><span>${esc(item.text)}</span></label>`).join('')}<span class="shot-progress">${done} / ${e.checklist.length} 완료</span></div>`;
   }
+  function fileForEvent(eventId) { return files.filter(f => f.eventId === eventId && f.group === 'eventDrawing'); }
+  function eventDrawingGallery(e) {
+    const drawings=fileForEvent(e.id);
+    if (!drawings.length) return '';
+    return `<div class="event-drawing-gallery"><strong>▤ 첨부 도면 ${drawings.length}개 · 눌러서 확인</strong><div class="event-drawing-thumbs">${drawings.map(f=>{
+      const src=f.type?.startsWith('image/')?objectURL(f):null;
+      return `<button type="button" class="event-drawing-thumb" data-preview-file="${esc(f.id)}" title="${esc(f.name)}">${src?`<img src="${esc(src)}" alt="${esc(f.name)}">`:'<span class="pdf-symbol">PDF</span>'}<small>${esc(f.name)}</small></button>`;
+    }).join('')}</div></div>`;
+  }
   function eventCard(e) {
     const p=projectBy(e.projectId);
-    return `<div class="selected-event"><span class="tag ${esc(e.type)}">${esc(kinds[e.type]||'기타')}</span> <span class="status-tag ${esc(e.status)}">${esc(statuses[e.status]||'예정')}</span><h4>${esc(e.title)}</h4><div class="small-meta">${e.time ? `🕒 ${esc(e.time)}<br>`:''}${p ? `▤ ${esc(p.name)}<br>`:''}${e.location? `⌁ ${esc(e.location)}`:''}</div>${renderChecklist(e)}<div class="se-actions"><button type="button" class="tiny-btn" data-edit-event="${esc(e.id)}">수정</button>${p?`<button type="button" class="tiny-btn" data-open-project="${esc(p.id)}">도면 보기</button>`:''}<button type="button" class="tiny-btn" data-toggle-event="${esc(e.id)}">${e.status==='done'?'예정으로 변경':'✓ 완료'}</button><button type="button" class="tiny-btn action-danger" data-remove-event="${esc(e.id)}">삭제</button></div></div>`;
+    const drawings=fileForEvent(e.id);
+    return `<div class="selected-event"><span class="tag ${esc(e.type)}">${esc(kinds[e.type]||'기타')}</span> <span class="status-tag ${esc(e.status)}">${esc(statuses[e.status]||'예정')}</span>${drawings.length?` <span class="tag file-count">▤ 도면 ${drawings.length}</span>`:''}<h4>${esc(e.title)}</h4><div class="small-meta">${e.time ? `🕒 ${esc(e.time)}<br>`:''}${p ? `▤ ${esc(p.name)}<br>`:''}${e.location? `⌁ ${esc(e.location)}`:''}</div>${eventDrawingGallery(e)}${renderChecklist(e)}<div class="se-actions"><button type="button" class="tiny-btn" data-edit-event="${esc(e.id)}">수정</button>${p?`<button type="button" class="tiny-btn" data-open-project="${esc(p.id)}">제품 도면</button>`:''}<button type="button" class="tiny-btn" data-toggle-event="${esc(e.id)}">${e.status==='done'?'예정으로 변경':'✓ 완료'}</button><button type="button" class="tiny-btn action-danger" data-remove-event="${esc(e.id)}">삭제</button></div></div>`;
   }
   function renderSelected() {
     const d = new Date(`${selectedDay}T12:00:00`);
@@ -140,7 +150,8 @@
     $('eventResult').textContent=`${rows.length}건 표시`;
     $('scheduleRows').innerHTML=rows.length ? rows.map(e=>{
       const p=projectBy(e.projectId);
-      return `<tr><td class="table-date">${esc(dateDisplay(e.date))}<span>${esc(e.time||'시간 미정')}</span></td><td><div class="table-title">${esc(e.title)}</div><div class="table-sub">${esc(kinds[e.type])} ${e.location?' · '+esc(e.location):''}</div></td><td class="table-project">${p?`<button type="button" class="tiny-btn" data-open-project="${esc(p.id)}">${esc(p.name)}</button>`:'—'}</td><td><span class="status-tag ${esc(e.status)}">${esc(statuses[e.status])}</span></td><td><div class="table-actions"><button type="button" class="tiny-btn" data-edit-event="${esc(e.id)}">수정</button><button type="button" class="tiny-btn" data-toggle-event="${esc(e.id)}">${e.status==='done'?'예정':'완료'}</button><button type="button" class="tiny-btn action-danger" data-remove-event="${esc(e.id)}">삭제</button></div></td></tr>`;
+      const drawingCount=fileForEvent(e.id).length;
+      return `<tr><td class="table-date">${esc(dateDisplay(e.date))}<span>${esc(e.time||'시간 미정')}</span></td><td><div class="table-title">${esc(e.title)}</div><div class="table-sub">${esc(kinds[e.type])} ${e.location?' · '+esc(e.location):''}</div>${drawingCount?`<button type="button" class="schedule-file-link" data-edit-event="${esc(e.id)}">▤ 첨부 도면 ${drawingCount}개 보기</button>`:''}</td><td class="table-project">${p?`<button type="button" class="tiny-btn" data-open-project="${esc(p.id)}">${esc(p.name)}</button>`:'—'}</td><td><span class="status-tag ${esc(e.status)}">${esc(statuses[e.status])}</span></td><td><div class="table-actions"><button type="button" class="tiny-btn" data-edit-event="${esc(e.id)}">수정</button><button type="button" class="tiny-btn" data-toggle-event="${esc(e.id)}">${e.status==='done'?'예정':'완료'}</button><button type="button" class="tiny-btn action-danger" data-remove-event="${esc(e.id)}">삭제</button></div></td></tr>`;
     }).join('') : '<tr class="blank-row"><td colspan="5">조건에 맞는 일정이 없습니다. ＋ 새 일정 등록을 눌러 주세요.</td></tr>';
   }
   function showModal(which) { $(which).hidden=false; document.body.style.overflow='hidden'; }
@@ -165,6 +176,9 @@
     const e=idValue?eventBy(idValue):null;
     if (idValue&&!e) {notify('일정을 찾을 수 없습니다.',true);return;}
     $('eventForm').reset();
+    eventModalMedia=e?fileForEvent(e.id).map(f=>({...f,existing:true})):[];
+    $('eventDrawingInput').value='';
+    renderEventDrawings();
     $('eventModalTitle').textContent=e?'촬영 / 작업 일정 수정':'새 촬영 일정';
     $('eventSaveBtn').textContent=e?'일정 수정 저장':'일정 저장';
     $('eProject').innerHTML='<option value="">연결 안 함 (독립 일정)</option>'+projects.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.customer?' · '+esc(p.customer):''}</option>`).join('');
@@ -177,7 +191,32 @@
       const p=projectId?projectBy(projectId):null;
       if (p && p.shots) $('eChecklist').value=p.shots;
     }
+    renderLinkedProjectDrawings();
     showModal('eventModal');
+  }
+  function renderEventDrawings() {
+    const node=$('eventDrawingsList');
+    node.innerHTML=eventModalMedia.length ? eventModalMedia.map(f=>{
+      const src=f.type?.startsWith('image/')?objectURL(f):null;
+      return `<div class="file-item"><div class="file-thumbnail">${src?`<img src="${esc(src)}" alt="">`:'PDF'}</div><div class="file-item-info"><button type="button" data-preview-file="${esc(f.id)}" title="클릭하여 도면 열기">${esc(f.name)}</button><small>${sizeTxt(f.size||0)} · ${f.existing?'저장된 도면':'저장 대기'}</small></div><button type="button" class="file-remove" data-drop-event-media="${esc(f.id)}" aria-label="${esc(f.name)} 첨부 제거">×</button></div>`;
+    }).join('') : '<div class="file-empty">아직 등록된 도면이 없습니다. 여러 파일을 한 번에 선택할 수 있습니다.</div>';
+  }
+  function addEventDrawings(input) {
+    for (const f of Array.from(input.files || [])) {
+      const image=f.type.startsWith('image/'), pdf=f.type==='application/pdf'||/\.pdf$/i.test(f.name);
+      if (!image && !pdf) {notify('도면은 이미지(JPG, PNG 등) 또는 PDF만 첨부할 수 있습니다.',true);continue;}
+      if (f.size>25*1024*1024) {notify(`${f.name}: 도면 파일은 25MB 이하만 첨부할 수 있습니다.`,true);continue;}
+      eventModalMedia.push({id:id(),group:'eventDrawing',eventId:editingEventId||'',name:f.name,type:f.type||(pdf?'application/pdf':'application/octet-stream'),size:f.size,blob:f,existing:false,createdAt:new Date().toISOString()});
+    }
+    input.value='';renderEventDrawings();
+  }
+  function renderLinkedProjectDrawings() {
+    const node=$('linkedProjectDrawings');
+    const projectId=$('eProject').value;
+    const drawings=projectId?fileForProject(projectId,'drawing'):[];
+    node.hidden=!drawings.length;
+    if (!drawings.length) {node.innerHTML='';return;}
+    node.innerHTML=`<strong>▤ 선택한 제품에 이미 등록된 도면 ${drawings.length}개</strong><div>${drawings.map(f=>`<button type="button" class="tiny-btn" data-preview-file="${esc(f.id)}">${esc(f.name)}</button>`).join('')}</div><small>이 도면은 기존 제품 보관함에 저장되어 있습니다. 일정에도 별도로 올릴 필요는 없습니다.</small>`;
   }
   function renderMedia() {
     for (const group of ['drawing','reference']) {
@@ -226,12 +265,21 @@
     const oldChecklist=(old?.checklist||[]);
     const checklist=$('eChecklist').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map((text,i)=>({text,done:oldChecklist[i]?.text===text?Boolean(oldChecklist[i].done):false}));
     const e={id:old?.id||id(),title,date,time:$('eTime').value,projectId:$('eProject').value,type:$('eType').value,status:$('eStatus').value,location:$('eLocation').value.trim(),memo:$('eMemo').value.trim(),checklist,createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
+    const keep=new Set(eventModalMedia.map(f=>f.id));
+    const removed=files.filter(f=>f.eventId===e.id && f.group==='eventDrawing' && !keep.has(f.id));
+    const added=eventModalMedia.filter(f=>!f.existing).map(f=>({id:f.id,group:'eventDrawing',eventId:e.id,name:f.name,type:f.type,size:f.size,blob:f.blob,createdAt:f.createdAt}));
     const saveBtn=$('eventSaveBtn');saveBtn.disabled=true;
-    try {await transact(['events'],tx=>tx.objectStore('events').put(e));
+    try {
+      await transact(['events','files'],tx=>{
+        tx.objectStore('events').put(e);
+        for (const f of removed) tx.objectStore('files').delete(f.id);
+        for (const f of added) tx.objectStore('files').put(f);
+      });
+      removed.forEach(f=>releaseObjectURL(f.id));
       closeModal('eventModal'); selectedDay=date;const d=new Date(`${date}T12:00:00`);viewMonth=new Date(d.getFullYear(),d.getMonth(),1);
-      switchTab('calendar'); notify(old?'일정을 수정했습니다.':'촬영 일정을 등록했습니다.');
-    } catch(err) {console.error(err);notify('일정을 저장할 수 없습니다.',true);} finally{saveBtn.disabled=false;}
-    await reload();
+      await reload();switchTab('calendar');
+      notify(old?`일정과 도면을 수정했습니다. (도면 ${eventModalMedia.length}개)`:`일정과 도면을 저장했습니다. (도면 ${eventModalMedia.length}개)`);
+    } catch(err) {console.error(err);notify('일정 또는 첨부 도면을 저장할 수 없습니다. 저장공간을 확인하세요.',true);} finally{saveBtn.disabled=false;}
   }
   function renderDetail(idValue) {
     const p=projectBy(idValue);if(!p)return;
@@ -245,7 +293,7 @@
   }
   function releaseObjectURL(fId) { const url=objectURLs.get(fId);if(url){URL.revokeObjectURL(url);objectURLs.delete(fId);} }
   function previewFile(fId) {
-    const f=modalMedia.find(f=>f.id===fId)||files.find(f=>f.id===fId);
+    const f=eventModalMedia.find(f=>f.id===fId)||modalMedia.find(f=>f.id===fId)||files.find(f=>f.id===fId);
     if (!f) { notify('첨부 파일이 없습니다.',true);return; }
     const url=objectURL(f);if (!url) {notify('파일을 열 수 없습니다.',true);return;}
     const w=window.open(url,'_blank','noopener');
@@ -253,7 +301,12 @@
   }
   async function deleteEvent(eId) {
     const e=eventBy(eId);if (!e||!confirm(`'${e.title}' 일정을 삭제할까요?`))return;
-    try {await transact(['events'],tx=>tx.objectStore('events').delete(eId));await reload();notify('일정을 삭제했습니다.');}
+    const attached=fileForEvent(eId);
+    if (attached.length && !confirm(`이 일정에 첨부된 도면 ${attached.length}개도 함께 삭제됩니다. 계속할까요?`)) return;
+    try {await transact(['events','files'],tx=>{
+      tx.objectStore('events').delete(eId);
+      for (const f of attached)tx.objectStore('files').delete(f.id);
+    });attached.forEach(f=>releaseObjectURL(f.id));await reload();notify('일정과 첨부 도면을 삭제했습니다.');}
     catch(err){console.error(err);notify('일정을 삭제할 수 없습니다.',true);}
   }
   async function deleteProject(pId) {
@@ -320,7 +373,7 @@
     const btn=$('backupBtn');btn.disabled=true;btn.textContent='백업 만드는 중…';
     try {
       const data={application:'kd-personal-shoot-planner',version:1,exportedAt:new Date().toISOString(),projects,events,files:[]};
-      for(const f of files) data.files.push({id:f.id,projectId:f.projectId,group:f.group,name:f.name,type:f.type,size:f.size,createdAt:f.createdAt,base64:await blobAsBase64(f.blob)});
+      for(const f of files) data.files.push({id:f.id,projectId:f.projectId||'',eventId:f.eventId||'',group:f.group,name:f.name,type:f.type,size:f.size,createdAt:f.createdAt,base64:await blobAsBase64(f.blob)});
       const json=JSON.stringify(data),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob);
       const a=document.createElement('a');a.href=url;a.download=`강동자바라_개인도면촬영_백업_${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
       notify(`백업 완료 · 제품 ${projects.length}건, 일정 ${events.length}건, 첨부 ${files.length}개`);
@@ -337,8 +390,10 @@
       if(!confirm(`백업 내용을 불러오면 현재 PC의 제품 ${projects.length}건과 일정 ${events.length}건을 백업 내용으로 교체합니다.\n\n백업 파일: 제품 ${data.projects.length}건, 일정 ${data.events.length}건, 첨부 ${data.files.length}개\n\n계속할까요?`))return;
       const imported=[];
       for(const entry of data.files) {
-        if(typeof entry.base64!=='string'||!entry.id||!entry.projectId||!entry.name||!['drawing','reference'].includes(entry.group))throw Error('첨부파일 정보가 손상되었습니다.');
-        imported.push({id:entry.id,projectId:entry.projectId,group:entry.group,name:entry.name,type:entry.type||'application/octet-stream',size:entry.size||0,createdAt:entry.createdAt||'',blob:base64ToBlob(entry.base64,entry.type)});
+        const validProjectFile=['drawing','reference'].includes(entry.group) && !!entry.projectId;
+        const validEventFile=entry.group==='eventDrawing' && !!entry.eventId;
+        if(typeof entry.base64!=='string'||!entry.id||!entry.name||(!validProjectFile&&!validEventFile))throw Error('첨부파일 정보가 손상되었습니다.');
+        imported.push({id:entry.id,projectId:entry.projectId||'',eventId:entry.eventId||'',group:entry.group,name:entry.name,type:entry.type||'application/octet-stream',size:entry.size||0,createdAt:entry.createdAt||'',blob:base64ToBlob(entry.base64,entry.type)});
       }
       for(const a of data.projects)if(!a.id||typeof a.name!=='string')throw Error('제품 정보가 손상되었습니다.');
       for(const a of data.events)if(!a.id||!a.date||!a.title)throw Error('일정 정보가 손상되었습니다.');
@@ -367,6 +422,8 @@
     $('eventTypeFilter').addEventListener('change',renderSchedule);
     $('projectForm').addEventListener('submit',saveProject);
     $('eventForm').addEventListener('submit',saveEvent);
+    $('eventDrawingInput').addEventListener('change',ev=>addEventDrawings(ev.target));
+    $('eProject').addEventListener('change',renderLinkedProjectDrawings);
     $('drawingInput').addEventListener('change',ev=>addMedia(ev.target,'drawing'));
     $('referenceInput').addEventListener('change',ev=>addMedia(ev.target,'reference'));
     $('toggleSketch').addEventListener('click',()=>{$('sketchBox').hidden=!$('sketchBox').hidden;if(!$('sketchBox').hidden)redrawSketch();});
@@ -381,6 +438,7 @@
       const t=ev.target;
       const close=t.closest('[data-close]');if(close){closeModal(close.dataset.close);return;}
       const dropped=t.closest('[data-drop-media]');if(dropped){modalMedia=modalMedia.filter(f=>f.id!==dropped.dataset.dropMedia);renderMedia();return;}
+      const droppedEvent=t.closest('[data-drop-event-media]');if(droppedEvent){eventModalMedia=eventModalMedia.filter(f=>f.id!==droppedEvent.dataset.dropEventMedia);renderEventDrawings();return;}
       const preview=t.closest('[data-preview-file]');if(preview){previewFile(preview.dataset.previewFile);return;}
       const edit=t.closest('[data-edit-event]');if(edit){showEvent(edit.dataset.editEvent);return;}
       const toggle=t.closest('[data-toggle-event]');if(toggle){toggleStatus(toggle.dataset.toggleEvent);return;}

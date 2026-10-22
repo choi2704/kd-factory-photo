@@ -119,7 +119,7 @@
   </div>
 
   <div class="modal-backdrop" id="eventModal" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
       <div class="modal-head"><div><small>SHOOTING & WORK SCHEDULE</small><h2 id="eventModalTitle">새 촬영 일정</h2></div><button type="button" class="icon-close" data-close="eventModal" aria-label="닫기">×</button></div>
       <form id="eventForm"><div class="modal-body">
         <div class="form-grid two">
@@ -133,12 +133,22 @@
           <label class="field full">촬영 체크리스트 <span class="field-hint">한 줄에 한 항목씩 입력</span><textarea id="eChecklist" rows="4" placeholder="제품 전체 모습 촬영&#10;가공 과정 영상&#10;특수 연결 부위 클로즈업&#10;완성품 정면 사진"></textarea></label>
           <label class="field full">준비물 / 특이사항<textarea id="eMemo" rows="3" placeholder="예: 고프로 배터리, 삼각대 준비 / 시제품 조립 전에 먼저 촬영"></textarea></label>
         </div>
+        <section class="file-panel event-drawing-panel" aria-label="일정 도면 첨부">
+          <div class="file-header">
+            <h3>▤ 이 일정의 도면 첨부 <span class="attach-accent">NEW</span></h3>
+            <span>제품 등록 없이 일정에 직접 첨부합니다. 첨부한 도면은 달력에서 언제든 다시 볼 수 있습니다.</span>
+          </div>
+          <label class="upload-zone event-upload" for="eventDrawingInput">＋ 도면 · 치수 사진 · PDF 첨부하기<input id="eventDrawingInput" type="file" multiple accept="image/*,.pdf,application/pdf" hidden></label>
+          <div class="files-list" id="eventDrawingsList" aria-live="polite"><div class="file-empty">도면이 없습니다. 파일을 여러 개 첨부할 수 있습니다.</div></div>
+          <p class="upload-hint">지원 형식: JPG · PNG 등 이미지, PDF / 파일당 최대 25MB · 일정 저장과 함께 저장됩니다.</p>
+          <div id="linkedProjectDrawings" class="linked-drawings" hidden></div>
+        </section>
       </div><div class="modal-foot"><button type="button" class="btn btn-outline" data-close="eventModal">취소</button><button type="submit" class="btn btn-primary" id="eventSaveBtn">일정 저장</button></div></form>
     </div>
   </div>
 
   <div class="modal-backdrop" id="detailModal" hidden><div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div class="modal-head"><div><small>PRODUCT DETAIL</small><h2 id="detailTitle">제품 정보</h2></div><button type="button" class="icon-close" data-close="detailModal" aria-label="닫기">×</button></div><div class="modal-body" id="detailContent"></div><div class="modal-foot"><button type="button" class="btn btn-outline" data-close="detailModal">닫기</button><button type="button" class="btn btn-primary" id="detailAddEvent">＋ 이 제품 촬영 일정</button><button type="button" class="btn btn-outline" id="detailEdit">제품 수정</button><button type="button" class="btn btn-danger-soft" id="detailDelete">삭제</button></div></div></div>
-  <div class="modal-backdrop" id="helpModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal-head"><div><small>USER GUIDE</small><h2 id="helpTitle">사용 안내 · 데이터 보관</h2></div><button type="button" class="icon-close" data-close="helpModal" aria-label="닫기">×</button></div><div class="modal-body help-copy"><h3>① 제품 / 도면 먼저 등록</h3><p>특이 제작품의 이름, 규격, 주의사항을 입력하고 도면(PDF·이미지), 참고 사진을 첨부하세요. 화면에서 직접 간단 스케치도 가능합니다.</p><h3>② 촬영 · 작업 일정 등록</h3><p>사진, 영상, 사진+영상, 도면 확인 등으로 구분해 달력에 날짜를 표시합니다. 제품과 연결하면 도면을 함께 볼 수 있습니다.</p><h3>③ 촬영 체크리스트 활용</h3><p>일정마다 필요한 촬영 장면을 항목별로 입력해 두고, 촬영하면서 체크 표시하세요.</p><h3>④ 개인 데이터와 백업</h3><p>내용은 현재 사용 중인 브라우저 내부 저장공간(IndexedDB)에만 저장됩니다. 서버·Supabase·다른 직원의 기기와 동기화하지 않습니다. 브라우저 데이터 삭제나 PC 교체 시 사라질 수 있으므로 <strong>상단의 ‘백업 저장’을 주기적으로 눌러 JSON 파일을 안전하게 보관</strong>하세요.</p><div class="help-warning">※ 이 파일을 GitHub Pages에 올리면 프로그램 화면 주소 자체는 공개될 수 있습니다. 혼자만 사용하려면 PC에서 index.html 파일을 직접 여는 방식이 가장 간단합니다. 다른 브라우저나 PC로 옮길 때는 백업 파일을 가져오세요.</div><p class="small-note">첨부 파일: 이미지/PDF 최대 25MB, 참고 영상 최대 60MB(파일당). 촬영한 긴 원본 영상은 별도로 보관하고 여기에는 일정·참고 자료 위주로 등록하는 것을 권장합니다.</p></div><div class="modal-foot"><button type="button" class="btn btn-primary" data-close="helpModal">확인</button></div></div></div>
+  <div class="modal-backdrop" id="helpModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal-head"><div><small>USER GUIDE</small><h2 id="helpTitle">사용 안내 · 데이터 보관</h2></div><button type="button" class="icon-close" data-close="helpModal" aria-label="닫기">×</button></div><div class="modal-body help-copy"><h3>① 제품 / 도면 먼저 등록</h3><p>특이 제작품의 이름, 규격, 주의사항을 입력하고 도면(PDF·이미지), 참고 사진을 첨부하세요. 화면에서 직접 간단 스케치도 가능합니다.</p><h3>② 촬영 · 작업 일정 등록 + 도면 첨부</h3><p>촬영 일정을 입력할 때 하단의 <strong>‘이 일정의 도면 첨부’</strong>에서 이미지 또는 PDF를 직접 올릴 수 있습니다. 별도로 제품을 등록할 필요가 없습니다. 달력에서 날짜를 선택하면 도면 파일을 바로 열 수 있습니다. 기존 제품과 연결한 경우 제품 보관함의 도면도 표시됩니다.</p><h3>③ 촬영 체크리스트 활용</h3><p>일정마다 필요한 촬영 장면을 항목별로 입력해 두고, 촬영하면서 체크 표시하세요.</p><h3>④ 개인 데이터와 백업</h3><p>내용은 현재 사용 중인 브라우저 내부 저장공간(IndexedDB)에만 저장됩니다. 서버·Supabase·다른 직원의 기기와 동기화하지 않습니다. 브라우저 데이터 삭제나 PC 교체 시 사라질 수 있으므로 <strong>상단의 ‘백업 저장’을 주기적으로 눌러 JSON 파일을 안전하게 보관</strong>하세요.</p><div class="help-warning">※ 이 파일을 GitHub Pages에 올리면 프로그램 화면 주소 자체는 공개될 수 있습니다. 혼자만 사용하려면 PC에서 index.html 파일을 직접 여는 방식이 가장 간단합니다. 다른 브라우저나 PC로 옮길 때는 백업 파일을 가져오세요.</div><p class="small-note">첨부 파일: 이미지/PDF 최대 25MB, 참고 영상 최대 60MB(파일당). 촬영한 긴 원본 영상은 별도로 보관하고 여기에는 일정·참고 자료 위주로 등록하는 것을 권장합니다.</p></div><div class="modal-foot"><button type="button" class="btn btn-primary" data-close="helpModal">확인</button></div></div></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
