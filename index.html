@@ -1,7 +1,145 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>강동자바라 제작관리</title><style>
-body{font-family:Arial,"Malgun Gothic",sans-serif;background:#eef4f8;margin:0;display:grid;place-items:center;min-height:100vh}
-.box{background:white;padding:30px;border-radius:18px;box-shadow:0 8px 25px #0001;text-align:center;max-width:500px;width:90%}
-h1{color:#143c5b}.buttons{display:grid;gap:12px;margin-top:22px}a{text-decoration:none;padding:18px;border-radius:12px;font-weight:900;font-size:21px}
-.office{background:#287db8;color:white}.factory{background:#148653;color:white}
-</style></head><body><div class="box"><h1>강동자바라 제작관리</h1><p>사용할 화면을 선택하세요.</p><div class="buttons"><a class="office" href="office.html">💻 사무실용</a><a class="factory" href="factory.html">📱 공장 작업완료용</a></div></div></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173c59">
+  <meta name="color-scheme" content="light">
+  <title>강동자바라 | 도면·촬영 일정관리</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark">KD<span>+</span></div>
+        <div><div class="brand-name">강동자바라</div><div class="brand-sub">제작 도면 · 콘텐츠 촬영 일정관리</div></div>
+      </div>
+      <div class="header-actions">
+        <span class="local-pill"><i></i> 개인용 · 내 PC에 저장</span>
+        <button type="button" class="header-btn" id="backupBtn" title="도면과 일정을 파일로 백업">⇩ 백업 저장</button>
+        <button type="button" class="header-btn" id="restoreBtn">⇧ 백업 불러오기</button>
+        <button type="button" class="header-btn header-help" id="helpBtn" title="사용 방법">? 사용 안내</button>
+        <input type="file" id="restoreInput" accept=".json,application/json" hidden>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-wrap">
+    <div class="page-intro">
+      <div><div class="eyebrow">MY PRODUCTION WORKSPACE</div><h1>도면 · 촬영 스케줄 <span>관리</span></h1><p>특이사항 있는 제품의 도면을 모아두고, 촬영일을 달력에서 관리하세요.</p></div>
+      <div class="intro-actions"><button type="button" class="btn btn-ghost" id="newProjectBtn">＋ 제품 / 도면 등록</button><button type="button" class="btn btn-primary" id="newEventBtn">＋ 촬영 일정 등록</button></div>
+    </div>
+
+    <section class="stat-grid" aria-label="현황">
+      <button class="stat-card" data-stat="projects" type="button"><span class="stat-icon paper-icon">▤</span><span><small>등록된 제품 / 도면</small><b id="statsProducts">0<span>건</span></b></span></button>
+      <button class="stat-card" data-stat="upcoming" type="button"><span class="stat-icon blue-icon">▣</span><span><small>예정된 촬영 · 작업</small><b id="statsUpcoming">0<span>건</span></b></span></button>
+      <button class="stat-card" data-stat="today" type="button"><span class="stat-icon amber-icon">◷</span><span><small>오늘 일정</small><b id="statsToday">0<span>건</span></b></span></button>
+      <button class="stat-card" data-stat="done" type="button"><span class="stat-icon green-icon">✓</span><span><small>완료된 일정</small><b id="statsDone">0<span>건</span></b></span></button>
+    </section>
+
+    <div class="toolbar">
+      <div class="tabs" role="tablist" aria-label="관리 화면 선택">
+        <button type="button" role="tab" class="tab active" data-tab="calendar" aria-selected="true">▦ 월간 달력</button>
+        <button type="button" role="tab" class="tab" data-tab="projects" aria-selected="false">▤ 제품 · 도면 보관함</button>
+        <button type="button" role="tab" class="tab" data-tab="schedule" aria-selected="false">☷ 전체 촬영 일정</button>
+      </div>
+      <div class="search-holder"><span>⌕</span><input id="searchInput" type="search" placeholder="제품명 · 촬영명 · 메모 검색" aria-label="검색"></div>
+    </div>
+
+    <div id="calendarView" class="view active">
+      <div class="calendar-layout">
+        <section class="panel calendar-panel">
+          <div class="panel-titlebar">
+            <div><h2>촬영 일정 달력</h2><p>날짜를 누르면 해당 날짜의 일정이 표시됩니다.</p></div>
+            <div class="month-nav"><button type="button" id="prevMonth" aria-label="이전 달">‹</button><strong id="monthLabel">2026년 10월</strong><button type="button" id="nextMonth" aria-label="다음 달">›</button><button type="button" class="today-btn" id="todayBtn">오늘</button></div>
+          </div>
+          <div class="legend"><span><i class="dot photo"></i>사진</span><span><i class="dot video"></i>영상</span><span><i class="dot both"></i>사진+영상</span><span><i class="dot drawing"></i>도면·기타</span><span class="legend-note">완료된 일정은 ✓ 표시</span></div>
+          <div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+          <div class="calendar-grid" id="calendarGrid" aria-label="촬영 일정 달력"></div>
+        </section>
+        <aside class="calendar-side">
+          <section class="panel side-panel">
+            <div class="side-top"><div class="side-date" id="selectedLabel">선택한 날짜</div><button type="button" class="small-plus" id="addSelectedDate" title="선택 날짜에 일정 추가">＋ 일정</button></div>
+            <div id="selectedEvents" class="selected-list"></div>
+          </section>
+          <section class="panel side-panel upcoming-panel">
+            <div class="side-top"><h3>다가오는 일정</h3><span class="mini-tag">오늘부터</span></div>
+            <div id="upcomingEvents" class="upcoming-list"></div>
+          </section>
+          <div class="guide-strip"><strong>TIP</strong> 특수 규격, 제작 주의사항, 촬영 구도를 제품별로 적고, 일정과 연결해 사용하세요.</div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="projectsView" class="view">
+      <section class="panel full-panel">
+        <div class="panel-titlebar"><div><h2>제품 · 도면 보관함</h2><p>제품별 도면, 치수, 특이사항과 촬영 메모를 한곳에서 확인합니다.</p></div><button type="button" class="btn btn-primary" id="newProjectBtn2">＋ 새 제품 등록</button></div>
+        <div class="filter-row"><label for="projectCategory">제품 종류</label><select id="projectCategory"><option value="all">전체 종류</option><option>스텐 자바라 대문</option><option>폴딩도어</option><option>방범창</option><option>안전난간대</option><option>차양 · 캐노피</option><option>렉산</option><option>기타 제작품</option></select><span id="projectResult" class="filter-result"></span></div>
+        <div id="projectGrid" class="project-grid"></div>
+      </section>
+    </div>
+
+    <div id="scheduleView" class="view">
+      <section class="panel full-panel">
+        <div class="panel-titlebar"><div><h2>전체 촬영 · 제작 일정</h2><p>사진 · 영상 촬영과 도면 확인 일정을 상태별로 정리합니다.</p></div><button type="button" class="btn btn-primary" id="newEventBtn2">＋ 새 일정 등록</button></div>
+        <div class="filter-row"><label for="eventStatusFilter">진행 상태</label><select id="eventStatusFilter"><option value="all">전체</option><option value="planned">예정</option><option value="doing">진행중</option><option value="done">완료</option></select><label for="eventTypeFilter">구분</label><select id="eventTypeFilter"><option value="all">전체</option><option value="photo">사진</option><option value="video">영상</option><option value="both">사진 + 영상</option><option value="drawing">도면 확인</option><option value="other">기타</option></select><span id="eventResult" class="filter-result"></span></div>
+        <div class="table-scroll"><table class="schedule-table"><thead><tr><th>날짜 / 시간</th><th>촬영 및 작업 내용</th><th>관련 제품</th><th>진행 상태</th><th>관리</th></tr></thead><tbody id="scheduleRows"></tbody></table></div>
+      </section>
+    </div>
+
+    <footer class="site-footer">강동자바라 · 개인 작업관리 <span>인터넷 연결 없이 사용 가능 · 서버 전송 없음 · 정기적으로 백업 저장해 주세요.</span></footer>
+  </main>
+
+  <div class="modal-backdrop" id="projectModal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+      <div class="modal-head"><div><small>PRODUCT & DRAWING</small><h2 id="projectModalTitle">제품 / 도면 등록</h2></div><button type="button" class="icon-close" data-close="projectModal" aria-label="닫기">×</button></div>
+      <form id="projectForm">
+        <div class="modal-body">
+          <div class="form-grid two">
+            <label class="field">제품명 <em>*</em><input id="pName" required maxlength="100" placeholder="예: 경사형 스텐 안전난간대"></label>
+            <label class="field">제품 종류<select id="pCategory"><option>스텐 자바라 대문</option><option>폴딩도어</option><option>방범창</option><option>안전난간대</option><option>차양 · 캐노피</option><option>렉산</option><option selected>기타 제작품</option></select></label>
+            <label class="field">현장명 / 고객명<input id="pCustomer" maxlength="120" placeholder="선택 입력"></label>
+            <label class="field">규격 / 치수<input id="pSize" maxlength="150" placeholder="예: W2400 × H1100, SUS304"></label>
+          </div>
+          <div class="form-grid two">
+            <label class="field">제작 특이사항<textarea id="pSpecial" rows="4" placeholder="일반 제품과 다른 점, 용접 위치, 주의해야 할 치수 등"></textarea></label>
+            <label class="field">촬영 포인트 / 필요한 장면<textarea id="pShots" rows="4" placeholder="예: 전체 정면 1장, 경사면 연결 부위 확대, 설치 전후 비교"></textarea></label>
+          </div>
+          <div class="file-row">
+            <section class="file-panel"><div class="file-header"><h3>▤ 도면 · 치수 자료</h3><span>사진 / PDF / 직접 스케치</span></div><label class="upload-zone" for="drawingInput">＋ 도면 또는 치수 사진 추가<input id="drawingInput" type="file" multiple accept="image/*,.pdf,application/pdf" hidden></label><div class="files-list" id="drawingsList"></div></section>
+            <section class="file-panel"><div class="file-header"><h3>▧ 참고 제품 사진 · 짧은 영상</h3><span>촬영 전 참고 자료</span></div><label class="upload-zone" for="referenceInput">＋ 사진 / 참고 영상 추가<input id="referenceInput" type="file" multiple accept="image/*,video/*" hidden></label><div class="files-list" id="referencesList"></div></section>
+          </div>
+          <div class="sketch-toggle"><button type="button" id="toggleSketch" class="link-btn">✎ 직접 간단 도면 스케치하기 <span>▾</span></button><small>마우스 또는 터치로 그린 뒤 도면으로 저장할 수 있습니다.</small></div>
+          <div class="sketch-box" id="sketchBox" hidden><canvas id="sketchCanvas" width="1000" height="460" aria-label="제품 도면 스케치 영역"></canvas><div class="sketch-tools"><span>검정 펜 · 자유 스케치</span><div><button type="button" class="btn btn-outline btn-compact" id="undoSketch">↶ 한 획 취소</button><button type="button" class="btn btn-outline btn-compact" id="clearSketch">전체 지우기</button><button type="button" class="btn btn-primary btn-compact" id="saveSketch">＋ 스케치 도면 추가</button></div></div></div>
+        </div>
+        <div class="modal-foot"><button type="button" class="btn btn-outline" data-close="projectModal">취소</button><button type="submit" class="btn btn-primary" id="projectSaveBtn">제품 · 도면 저장</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="eventModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+      <div class="modal-head"><div><small>SHOOTING & WORK SCHEDULE</small><h2 id="eventModalTitle">새 촬영 일정</h2></div><button type="button" class="icon-close" data-close="eventModal" aria-label="닫기">×</button></div>
+      <form id="eventForm"><div class="modal-body">
+        <div class="form-grid two">
+          <label class="field">작업 / 촬영 제목 <em>*</em><input id="eTitle" required maxlength="120" placeholder="예: 특수 난간 제작과정 촬영"></label>
+          <label class="field">관련 제품 / 도면<select id="eProject"><option value="">연결 안 함 (독립 일정)</option></select></label>
+          <label class="field">날짜 <em>*</em><input id="eDate" type="date" required></label>
+          <label class="field">시작 시간<input id="eTime" type="time"></label>
+          <label class="field">일정 구분<select id="eType"><option value="photo">사진 촬영</option><option value="video">영상 촬영</option><option value="both">사진 + 영상 촬영</option><option value="drawing">도면 확인 · 제작 체크</option><option value="other">기타 작업</option></select></label>
+          <label class="field">진행 상태<select id="eStatus"><option value="planned">예정</option><option value="doing">진행중</option><option value="done">완료</option></select></label>
+          <label class="field full">촬영 장소 / 작업 위치<input id="eLocation" maxlength="150" placeholder="예: 강동자바라 공장 / 설치 현장"></label>
+          <label class="field full">촬영 체크리스트 <span class="field-hint">한 줄에 한 항목씩 입력</span><textarea id="eChecklist" rows="4" placeholder="제품 전체 모습 촬영&#10;가공 과정 영상&#10;특수 연결 부위 클로즈업&#10;완성품 정면 사진"></textarea></label>
+          <label class="field full">준비물 / 특이사항<textarea id="eMemo" rows="3" placeholder="예: 고프로 배터리, 삼각대 준비 / 시제품 조립 전에 먼저 촬영"></textarea></label>
+        </div>
+      </div><div class="modal-foot"><button type="button" class="btn btn-outline" data-close="eventModal">취소</button><button type="submit" class="btn btn-primary" id="eventSaveBtn">일정 저장</button></div></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="detailModal" hidden><div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div class="modal-head"><div><small>PRODUCT DETAIL</small><h2 id="detailTitle">제품 정보</h2></div><button type="button" class="icon-close" data-close="detailModal" aria-label="닫기">×</button></div><div class="modal-body" id="detailContent"></div><div class="modal-foot"><button type="button" class="btn btn-outline" data-close="detailModal">닫기</button><button type="button" class="btn btn-primary" id="detailAddEvent">＋ 이 제품 촬영 일정</button><button type="button" class="btn btn-outline" id="detailEdit">제품 수정</button><button type="button" class="btn btn-danger-soft" id="detailDelete">삭제</button></div></div></div>
+  <div class="modal-backdrop" id="helpModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal-head"><div><small>USER GUIDE</small><h2 id="helpTitle">사용 안내 · 데이터 보관</h2></div><button type="button" class="icon-close" data-close="helpModal" aria-label="닫기">×</button></div><div class="modal-body help-copy"><h3>① 제품 / 도면 먼저 등록</h3><p>특이 제작품의 이름, 규격, 주의사항을 입력하고 도면(PDF·이미지), 참고 사진을 첨부하세요. 화면에서 직접 간단 스케치도 가능합니다.</p><h3>② 촬영 · 작업 일정 등록</h3><p>사진, 영상, 사진+영상, 도면 확인 등으로 구분해 달력에 날짜를 표시합니다. 제품과 연결하면 도면을 함께 볼 수 있습니다.</p><h3>③ 촬영 체크리스트 활용</h3><p>일정마다 필요한 촬영 장면을 항목별로 입력해 두고, 촬영하면서 체크 표시하세요.</p><h3>④ 개인 데이터와 백업</h3><p>내용은 현재 사용 중인 브라우저 내부 저장공간(IndexedDB)에만 저장됩니다. 서버·Supabase·다른 직원의 기기와 동기화하지 않습니다. 브라우저 데이터 삭제나 PC 교체 시 사라질 수 있으므로 <strong>상단의 ‘백업 저장’을 주기적으로 눌러 JSON 파일을 안전하게 보관</strong>하세요.</p><div class="help-warning">※ 이 파일을 GitHub Pages에 올리면 프로그램 화면 주소 자체는 공개될 수 있습니다. 혼자만 사용하려면 PC에서 index.html 파일을 직접 여는 방식이 가장 간단합니다. 다른 브라우저나 PC로 옮길 때는 백업 파일을 가져오세요.</div><p class="small-note">첨부 파일: 이미지/PDF 최대 25MB, 참고 영상 최대 60MB(파일당). 촬영한 긴 원본 영상은 별도로 보관하고 여기에는 일정·참고 자료 위주로 등록하는 것을 권장합니다.</p></div><div class="modal-foot"><button type="button" class="btn btn-primary" data-close="helpModal">확인</button></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
