@@ -33,3 +33,20 @@
 .schedule-file-link{display:inline-block;border:1px solid #bed9e7;color:#246d94;background:#f0f8ff;font-size:11px;font-weight:800;border-radius:5px;padding:6px 9px;margin-top:7px}
 .schedule-file-link:hover{background:#deefff}
 @media(max-width:690px){.event-drawing-panel{padding:12px}.event-drawing-panel .files-list{grid-template-columns:1fr}}
+
+/* v1.3 - 일정 입력 시작 위치에서 도면을 찾도록 개선 */
+.app-version{display:inline-block;vertical-align:middle;margin-left:5px;background:#e9f6ff;color:#166c9d;border-radius:5px;padding:2px 6px;font-size:10px;font-weight:900}
+.event-entry-guide{border-radius:8px;background:#e9f3fa;color:#315e79;font-size:12px;font-weight:900;padding:10px 12px;margin-bottom:17px}
+.event-entry-guide span{color:#1c81b5;padding:0 5px}
+.event-primary-fields{margin-bottom:0}
+.event-drawing-front{background:#ecf7ff;border:2px solid #4b9dd0;padding:16px 17px;margin:17px 0 20px;box-shadow:0 3px 12px #173c5910}
+.event-drawing-front .file-header{margin-bottom:10px}
+.event-drawing-front .file-header h3{font-size:18px;line-height:1.55;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.event-drawing-front .file-header span{margin-top:5px;font-size:12px;color:#50768b}
+.event-drawing-front .upload-zone{border:2px dashed #327eaa;color:#154e72;background:#fff;font-size:15px;padding:16px 12px}
+.event-drawing-front .upload-zone:focus-visible{outline:3px solid #227fbd;outline-offset:3px}
+.event-drawing-front .upload-zone:hover{background:#f2faff}
+.event-drawing-count{font-size:13px;line-height:1.3;background:#1a6d9e;color:white;padding:3px 9px;border-radius:20px}
+.event-extra-title{font-size:14px;font-weight:900;color:#234d68;border-bottom:1px solid #dce9f0;padding:0 0 10px;margin-bottom:16px}
+.event-extra-title span{font-size:11px;font-weight:500;color:#8b9fae;margin-left:7px}
+@media(max-width:690px){.event-entry-guide{font-size:11px}.event-drawing-front{padding:12px}.event-drawing-front .file-header h3{font-size:16px}.event-drawing-front .upload-zone{font-size:14px}}

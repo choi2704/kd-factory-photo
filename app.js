@@ -1,4 +1,4 @@
-/* 강동자바라 개인용 도면·촬영관리 v1.2 — 서버/로그인/외부 전송 없음 */
+/* 강동자바라 개인용 도면·촬영관리 v1.3 — 서버/로그인/외부 전송 없음 */
 (() => {
   'use strict';
   const DB_NAME = 'kd_personal_drawing_shoot_v1';
@@ -179,6 +179,7 @@
     eventModalMedia=e?fileForEvent(e.id).map(f=>({...f,existing:true})):[];
     $('eventDrawingInput').value='';
     renderEventDrawings();
+    $('eventModal').querySelector('.modal-body').scrollTop=0;
     $('eventModalTitle').textContent=e?'촬영 / 작업 일정 수정':'새 촬영 일정';
     $('eventSaveBtn').textContent=e?'일정 수정 저장':'일정 저장';
     $('eProject').innerHTML='<option value="">연결 안 함 (독립 일정)</option>'+projects.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.customer?' · '+esc(p.customer):''}</option>`).join('');
@@ -195,6 +196,7 @@
     showModal('eventModal');
   }
   function renderEventDrawings() {
+    $('eventDrawingCount').textContent=eventModalMedia.length+'개';
     const node=$('eventDrawingsList');
     node.innerHTML=eventModalMedia.length ? eventModalMedia.map(f=>{
       const src=f.type?.startsWith('image/')?objectURL(f):null;
@@ -423,6 +425,7 @@
     $('projectForm').addEventListener('submit',saveProject);
     $('eventForm').addEventListener('submit',saveEvent);
     $('eventDrawingInput').addEventListener('change',ev=>addEventDrawings(ev.target));
+    document.querySelector('.event-upload').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();$('eventDrawingInput').click();}});
     $('eProject').addEventListener('change',renderLinkedProjectDrawings);
     $('drawingInput').addEventListener('change',ev=>addMedia(ev.target,'drawing'));
     $('referenceInput').addEventListener('change',ev=>addMedia(ev.target,'reference'));
